@@ -5,7 +5,7 @@ cat .gitignore custom.dockerignore > .dockerignore
 
 # Build the docker image
 FILE="Dockerfile"
-TAG="docker.home.spgill.me/key-server"
+TAG="docker.home.spgill.me/keys-server"
 FROM="python:3.9-slim-buster"
 PUSH=false
 
