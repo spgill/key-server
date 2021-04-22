@@ -1,7 +1,7 @@
 FROM python:3.9-slim-buster
 
 # Copy source into image
-COPY * /opt/keys-server/
+COPY . /opt/keys-server/
 WORKDIR /opt/keys-server/
 
 # Install python requirements
