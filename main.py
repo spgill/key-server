@@ -1,53 +1,30 @@
 # stdlib imports
-import os
 import pathlib
+import re
 
 # vendor imports
-import flask
-import gevent.pywsgi
+import fastapi
+from fastapi.responses import PlainTextResponse
 
 
 # Constants
 DATA_VOLUME = "/data"
 
-
-# Method to generate flask app
-def createApp():
-    app = flask.Flask(__name__)
-
-    # Flask config
-    app.config["DEBUG"] = os.environ.get("FLASK_DEBUG", "").lower() == "true"
-
-    # Default route returns all of the concatenated public keys
-    @app.route("/", methods=["GET"])
-    def route_default():
-        output = ""
-
-        # Iterate through the data volume
-        for filepath in pathlib.Path(DATA_VOLUME).iterdir():
-            if filepath.suffix.lower() == ".pub":
-                with filepath.open("r") as handle:
-                    output += handle.read()
-
-        # Build the response object and send it
-        response = flask.make_response(output)
-        response.headers["content-type"] = "text/plain"
-        return response
-
-    return app
+app = fastapi.FastAPI()
 
 
-# Main method
-def main():
-    # Create the app
-    app = createApp()
+# There's only one route for this app
+@app.get("/")
+def route_default():
+    keys = []
 
-    # Start the server
-    print("Starting server at http://localhost:5000/")
-    gevent.pywsgi.WSGIServer(
-        listener=("0.0.0.0", 5000), application=app
-    ).serve_forever()
+    # Iterate through the data volume
+    for filepath in pathlib.Path(DATA_VOLUME).iterdir():
+        if filepath.suffix.lower() == ".pub":
+            with filepath.open("r") as handle:
+                keyContents = handle.read().strip()
+                keyMinusComment = re.sub(r" \S+@\S+$", "", keyContents)
+                keys.append(keyMinusComment)
 
-
-if __name__ == "__main__":
-    main()
+    # Return a concatentation of all the key objects
+    return PlainTextResponse("\n".join(keys) + "\n")

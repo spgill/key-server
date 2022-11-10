@@ -5,9 +5,9 @@ cat .gitignore custom.dockerignore > .dockerignore
 
 # Build the docker image
 FILE="Dockerfile"
-TAG="docker.home.spgill.me/keys-server"
-FROM="python:3.9-slim-buster"
-PUSH=false
+TAG="docker.home.spgill.me/key-server"
+FROM="python:3.10-slim-bullseye"
+PUSH=true
 
 docker rmi "$TAG:previous"
 docker tag "$TAG:latest" "$TAG:previous"
