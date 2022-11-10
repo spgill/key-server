@@ -7,7 +7,7 @@ cat .gitignore custom.dockerignore > .dockerignore
 FILE="Dockerfile"
 TAG="docker.home.spgill.me/key-server"
 FROM="python:3.10-slim-bullseye"
-PUSH=true
+# PUSH=false
 
 docker rmi "$TAG:previous"
 docker tag "$TAG:latest" "$TAG:previous"

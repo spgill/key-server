@@ -1,2 +1,2 @@
 #! /bin/bash
-honcho start prod
+exec honcho start prod
